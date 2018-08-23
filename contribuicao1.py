@@ -41,7 +41,6 @@ class Estado():
 		{'m': 0, 'c': 2}, # colocar 2 canibais no barco
 		]
 
-
 		for acao in acoes:
 			if self.b == 1: #saindo do lado esquerdo para o lado direito
 				novo_ce = self.ce - acao['c']

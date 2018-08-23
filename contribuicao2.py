@@ -1,69 +1,54 @@
-class Seta():
-	def __init__(self, sentido, proximo, anterior):
-		self.sentido = sentido
-		self.proximo = proximo
-		self.anterior = anterior
+mapaInicial = [1,1,1,1,0,-1,-1,-1,-1]
+mapaFinal = [-1,-1,-1,-1,0,1,1,1,1]
 
-	def mostra_seta(self):
-		print(self.sentido, end=' ')
+def movimentos_validos(mapa):
+	movimentos = []
+	for posicao, seta in enumerate(mapa):
+		salto = posicao + (seta * 2)
+		avanco = posicao + (seta)
 
-	def pode_mover(self):
-		if self.sentido == 'vazio':
-			return False
+		if seta == 0:
+			continue
 
+		if not (salto < 0 or salto >= len(mapa)):
+			if (mapa[salto] == 0):
+				temp = list(mapa)
+				temp[posicao] = 0
+				temp[salto] = seta
+				movimentos.append(temp)
 
-		if self.sentido == '->':
-			if (self.proximo.sentido == 'vazio' or (self.proximo.sentido != 'vazio' and self.proximo.sentido != self.sentido)):
-				return True
-		else:
-			if (self.anterior.sentido == 'vazio' or (self.anterior.sentido != 'vazio' and self.anterior.sentido != self.sentido)):
-				return True
+		if not (avanco < 0 or avanco >= len(mapa)):
+			if (mapa[avanco] == 0):
+				temp = list(mapa)
+				temp[posicao] = 0
+				temp[avanco] = seta
+				movimentos.append(temp)
 
-		return False
-
-
-class Estado():
-	def __init__(self, quant_setas):
-		# inicializa o problema
-		self.mapa = []
-		setaAtual = Seta('->', None, None)
-		self.mapa.append(setaAtual)
-		i = 1
-		while i < quant_setas:
-			setaAtual.proximo = Seta('->', None, setaAtual)
-			setaAtual = setaAtual.proximo
-			self.mapa.append(setaAtual)
-			i+=1
-
-		setaAtual.proximo = Seta('vazio', None, setaAtual)
-		setaAtual = setaAtual.proximo
-		self.mapa.append(setaAtual)
-		i = 0
-		while i < quant_setas:
-			setaAtual.proximo = Seta('<-', None, setaAtual)
-			setaAtual = setaAtual.proximo
-			self.mapa.append(setaAtual)
-			i+=1
+	return movimentos
 
 
-	def mostra_mapa(self):
-		for s in self.mapa:
-			s.mostra_seta()
-		print('\n#########')
+def bfs( mapaAtual, mapaFinal ):
+    proximo = []
+    for seta in mapaAtual:
+        filhos = movimentos_validos(seta[-1])
+        for elem in filhos:
+            temp = list(seta)
+            temp.append(elem)
+            if ( elem == mapaFinal ):
+                return temp
+            proximo.append(temp)
+    return proximo
 
 
-estado = Estado(4)
-estado.mostra_mapa()
-for s in estado.mapa:
-	print(s.sentido, s.pode_mover())
+def resolve_problema(mapaInicial, mapaFinal):
+    temp = [[mapaInicial]]
 
+    while(temp[-1] != mapaFinal):
+        temp = bfs(temp, mapaFinal)
 
+    for estado in temp:
+    	print estado	
 
+    return temp
 
-
-
-
-
-
-
-
+resolve_problema(mapaInicial, mapaFinal)
