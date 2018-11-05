@@ -3,13 +3,13 @@ import pandas as pd
 eps = np.finfo(float).eps
 from numpy import log2 as log
 
-dataset = {'Taste':['Salty','Spicy','Spicy','Spicy','Spicy','Sweet','Salty','Sweet','Spicy','Salty'],
-       'Temperature':['Hot','Hot','Hot','Cold','Hot','Cold','Cold','Hot','Cold','Hot'],
-       'Texture':['Soft','Soft','Hard','Hard','Hard','Soft','Soft','Soft','Soft','Hard'],
-'Eat':['No','No','Yes','No','Yes','Yes','No','Yes','Yes','Yes']}
+dataset = {'Sabor':['Salgado','Picante','Picante','Picante','Picante','Doce','Salgado','Doce','Picante','Salgado'],
+       'Temperatura':['Quente','Quente','Quente','Frio','Quente','Frio','Frio','Quente','Frio','Quente'],
+       'Textura':['Mole','Mole','Duro','Duro','Duro','Mole','Mole','Mole','Mole','Duro'],
+'Comer':['Nao','Nao','Sim','Nao','Sim','Sim','Nao','Sim','Sim','Sim']}
 
 
-df = pd.DataFrame(dataset,columns=['Taste','Temperature','Texture','Eat'])
+df = pd.DataFrame(dataset,columns=['Sabor','Temperatura','Textura','Comer'])
 print(df)
 
 def find_entropy(df):
@@ -65,7 +65,7 @@ def buildTree(df,tree=None):
     for value in attValue:
         
         subtable = get_subtable(df,node,value)
-        clValue,counts = np.unique(subtable['Eat'],return_counts=True)                        
+        clValue,counts = np.unique(subtable['Comer'],return_counts=True)                        
         
         if len(counts)==1:
             tree[node][value] = clValue[0]                                                    
@@ -93,7 +93,7 @@ def predict(inst,tree):
 
 
 tree = buildTree(df)
-testData = {'Taste': 'Salty', 'Temperature': 'Cold', 'Texture': 'Hard'}
+testData = {'Sabor': 'Picante', 'Temperatura': 'Frio', 'Textura': 'Duro'}
 instance = pd.Series(testData)
 prediction = predict(instance, tree)
 print("Prediction: ", prediction)
